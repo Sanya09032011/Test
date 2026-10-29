@@ -1,0 +1,12 @@
+# ПРИКЛАД налаштувань Codex для цієї системи. Це НЕ вмикається само: скопіюй потрібні рядки у свій файл
+#   Windows: C:\\Users\\<ти>\\.codex\\config.toml      macOS / Linux: ~/.codex/config.toml
+# (або попроси Codex: «додай у мій config.toml доступ до мережі для робочої папки»).
+
+# Агент сам редагує файли й запускає команди в межах цієї папки, про решту питає.
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+
+# Мережа потрібна для: npm install (один раз), озвучки ElevenLabs, докачування логотипів/стікерів.
+# Без цього Codex щоразу питатиме дозвіл на такі команди — це теж нормально, просто натискай «Дозволити».
+[sandbox_workspace_write]
+network_access = true

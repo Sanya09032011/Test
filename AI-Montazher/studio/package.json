@@ -1,0 +1,22 @@
+{
+  "name": "ai-montazher-studio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio",
+    "typecheck": "tsc --noEmit -p .",
+    "demo": "remotion render Reel out/ДЕМО-ролик.mp4 --scale=1.5 --crf=18",
+    "demos": "remotion render Subtitles out/ДЕМО-субтитри.mp4 --scale=1.5 --crf=20 && remotion render Animations out/ДЕМО-анімації.mp4 --scale=1.5 --crf=20 && remotion render Backgrounds out/ДЕМО-фони.mp4 --scale=1.5 --crf=20 && remotion still Fonts out/ДЕМО-шрифти.png --scale=1.5"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.518",
+    "@remotion/google-fonts": "4.0.518",
+    "remotion": "4.0.518",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "typescript": "^5.6.0"
+  }
+}
