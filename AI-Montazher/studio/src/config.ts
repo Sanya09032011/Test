@@ -6,23 +6,23 @@ import type { FontKey } from "./reel/fonts";
 
 export const BRAND = {
   /** Назва каналу — на бирці вгорі і на фінальній картці. */
-  channel: "МІЙ КАНАЛ",
+  channel: "Ятерапия",
   /** Нік у соцмережах. */
-  handle: "@my_channel",
+  handle: "@yaterapiya",
   /** Головний акцентний колір: ключові слова в субтитрах, плашки, цифри. */
-  accent: "#FFD23F",
+  accent: "#C9A35B",
   /** Другий колір: стрілки, «погано/ні», виділення. */
-  accent2: "#FF4D4D",
+  accent2: "#A8553E",
   /** Темний колір (текст на світлих плашках). */
-  ink: "#111111",
+  ink: "#16110D",
   /** Світлий колір (тло плашок і сцен). */
-  paper: "#F6F2EA",
+  paper: "#EFE6D8",
   /** Шрифт заголовків і плашок (список — src/reel/fonts.ts). */
-  font: "Montserrat" as FontKey,
+  font: "Manrope" as FontKey,
   /** Показувати бирку з назвою каналу вгорі кадру. */
   tag: true,
   /** Плитки соцмереж на фінальній картці (файли з public/social). */
-  socials: ["social/instagram-colorful-3d-tile.jpg", "social/tiktok-3d-black-tile.jpg", "social/threads-black-3d-tile.jpg", "social/telegram-blue-3d-tile.jpg"],
+  socials: ["social/instagram-colorful-3d-tile.jpg"],
   /** Твій стікер-персонаж для обкладинки й фінальної картки (з public/stickers, після tools/stickers.mjs). Порожньо — без нього. */
   mascot: "",
 };
