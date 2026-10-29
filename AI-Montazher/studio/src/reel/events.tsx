@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, Img, OffthreadVideo, Sequence, useCurrentFrame } from "remotion";
-import { clamp01, eio, eout, float, fr, inOut, isVideo, onColor, spr, src, Theme, useTheme } from "./core";
+import { clamp01, eio, eout, float, fr, handCss, headCss, inOut, isVideo, onColor, spr, src, Theme, useTheme } from "./core";
 import type { Ev } from "./types";
 
 /* ═══ ПОДІЇ НА ЕКРАНІ ═══
@@ -136,9 +136,9 @@ export const EventView: React.FC<{ e: Ev; all?: Ev[]; talk?: boolean }> = ({ e, 
       return <AbsoluteFill style={{ zIndex: 15, opacity: vis, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 18, top: zone(T).cy - T.H / 2, fontFamily: T.family }}>
         <div style={{ position: "relative", transform: `scale(${1.6 - 0.6 * k})`, filter: k < 0.99 ? `blur(${(1 - k) * 10}px)` : undefined, opacity: Math.min(1, k * 1.5) }}>
           <div style={{ position: "absolute", left: -18, right: -18, top: "52%", height: "42%", background: T.accent, borderRadius: 10, transform: `scaleX(${eout((lf - 6) / 10)}) rotate(-1.5deg)`, transformOrigin: "0 50%" }} />
-          <div style={{ position: "relative", fontWeight: H, fontSize: size, lineHeight: 1, letterSpacing: "-0.04em", color: e.color ?? "#fff", textShadow: "0 10px 30px rgba(0,0,0,.5)", whiteSpace: "nowrap", textTransform: e.upper === false ? undefined : "uppercase" }}>{text}</div>
+          <div style={{ position: "relative", fontSize: size, lineHeight: 1, ...headCss(T), color: e.color ?? "#fff", textShadow: "0 10px 30px rgba(0,0,0,.5)", whiteSpace: "nowrap", textTransform: e.upper === false ? undefined : "uppercase" }}>{text}</div>
         </div>
-        {e.sub && <div style={{ fontWeight: 700, fontSize: 40, color: "#fff", opacity: clamp01((lf - 10) / 6), textShadow: "0 6px 20px rgba(0,0,0,.6)" }}>{e.sub}</div>}
+        {e.sub && <div style={{ fontSize: 56, ...handCss(T), color: "#fff", opacity: clamp01((lf - 10) / 6), textShadow: "0 6px 20px rgba(0,0,0,.6)" }}>{e.sub}</div>}
       </AbsoluteFill>;
     }
     case "counter": {

@@ -18,7 +18,11 @@ export const BRAND = {
   /** Світлий колір (тло плашок і сцен). */
   paper: "#EFE6D8",
   /** Шрифт заголовків і плашок (список — src/reel/fonts.ts). */
-  font: "Manrope" as FontKey,
+  font: "Montserrat" as FontKey,
+  /** Шрифт великих заголовків: обкладинка, події title, фінальна картка. Порожньо — як font. */
+  headFont: "Spectral" as FontKey | "",
+  /** Рукописний шрифт для підписів-акцентів (sub під заголовками). Порожньо — як font. */
+  handFont: "Caveat" as FontKey | "",
   /** Показувати бирку з назвою каналу вгорі кадру. */
   tag: true,
   /** Плитки соцмереж на фінальній картці (файли з public/social). */

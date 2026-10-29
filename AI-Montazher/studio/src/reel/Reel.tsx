@@ -2,7 +2,7 @@ import React from "react";
 import { AbsoluteFill, Audio, CalculateMetadataFunction, Img, OffthreadVideo, Sequence, useCurrentFrame } from "remotion";
 import { Background } from "./backgrounds";
 import { Captions } from "./captions";
-import { clamp01, eio, fr, inOut, onColor, spr, src, ThemeProvider, useTheme } from "./core";
+import { clamp01, eio, fr, handCss, headCss, inOut, onColor, spr, src, ThemeProvider, useTheme } from "./core";
 import { EventView, evDur, FULL_TYPES } from "./events";
 import type { Ev, ReelProps } from "./types";
 
@@ -124,11 +124,11 @@ const Cover: React.FC<{ title: string; sub?: string; sticker?: string; frame?: n
       <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.55) 45%, rgba(0,0,0,.2) 100%)" }} />
     </AbsoluteFill> : <Background name="rays" />}
     {/* на кадрі з запису напис унизу (обличчя зазвичай угорі), але в межах зони 4:5 */}
-    <div style={{ position: "absolute", left: T.safe.left, right: T.safe.right, ...(video && !T.wide ? { bottom: T.H - 1120 } : { top: T.wide ? 110 : 330 }), fontFamily: T.family, fontWeight: T.heavy, fontSize: size, lineHeight: 1, letterSpacing: "-0.04em", textTransform: "uppercase" }}>
+    <div style={{ position: "absolute", left: T.safe.left, right: T.safe.right, ...(video && !T.wide ? { bottom: T.H - 1120 } : { top: T.wide ? 110 : 330 }), fontSize: size, lineHeight: 1, textTransform: "uppercase", ...headCss(T) }}>
       {words.map((w, i) => i === words.length - 1
         ? <div key={i}><span style={{ display: "inline-block", background: video ? T.accent : T.ink, color: video ? onColor(T.accent) : "#fff", padding: `${size * 0.04}px ${size * 0.12}px ${size * 0.1}px`, borderRadius: size * 0.14, marginTop: size * 0.06 }}>{w}</span></div>
         : <div key={i} style={{ color: onBg, textShadow: video ? "0 6px 24px rgba(0,0,0,.6)" : "none" }}>{w}</div>)}
-      {sub && <div style={{ display: "inline-block", marginTop: 22, fontSize: 40, letterSpacing: 0, background: video ? "#fff" : T.ink, color: video ? "#111" : "#fff", padding: "8px 18px", borderRadius: 14, textTransform: "none" }}>{sub}</div>}
+      {sub && <div style={{ display: "inline-block", marginTop: 22, fontSize: 52, letterSpacing: 0, ...handCss(T), background: video ? "#fff" : T.ink, color: video ? "#111" : "#fff", padding: "8px 18px", borderRadius: 14, textTransform: "none" }}>{sub}</div>}
     </div>
     {st && <Img src={src(st)} style={{ position: "absolute", right: T.safe.right - 20, bottom: T.wide ? 40 : 150, height: T.wide ? T.H * 0.62 : 480, objectFit: "contain", filter: "drop-shadow(0 30px 40px rgba(0,0,0,.4))" }} />}
   </AbsoluteFill>;
@@ -141,8 +141,8 @@ const EndCard: React.FC<{ at: number; title?: string; sub?: string }> = ({ at, t
   return <AbsoluteFill>
     <Background name="blobs" />
     <div style={{ position: "absolute", left: T.safe.left, right: T.safe.right, top: T.wide ? 140 : 300, fontFamily: T.family, transform: `translateY(${(1 - p) * 60}px)`, opacity: Math.min(1, p * 1.5) }}>
-      <div style={{ fontWeight: T.heavy, fontSize: Math.min(T.wide ? 110 : 112, (T.W - T.safe.left - T.safe.right) / Math.max(1, title.length * 0.66)), letterSpacing: "-0.045em", lineHeight: 1, color: T.ink, whiteSpace: "nowrap" }}>{title}</div>
-      {sub && <div style={{ fontWeight: 700, fontSize: 38, marginTop: 18, color: T.ink, opacity: 0.8 }}>{sub}</div>}
+      <div style={{ fontSize: Math.min(T.wide ? 110 : 112, (T.W - T.safe.left - T.safe.right) / Math.max(1, title.length * 0.66)), lineHeight: 1, ...headCss(T), color: T.ink, whiteSpace: "nowrap" }}>{title}</div>
+      {sub && <div style={{ fontSize: 52, marginTop: 18, color: T.ink, opacity: 0.8, ...handCss(T) }}>{sub}</div>}
       <div style={{ marginTop: 26, display: "inline-flex", alignItems: "center", gap: 12, background: T.ink, color: "#fff", padding: "12px 22px", borderRadius: 18, fontWeight: 800, fontSize: 36 }}>
         <div style={{ width: 16, height: 16, borderRadius: 8, background: T.accent }} />{T.handle}
       </div>

@@ -10,15 +10,20 @@ export const FPS = 30;
 export const SAFE_V = { top: 110, bottom: 270, left: 56, right: 76 };
 export const SAFE_W = { top: 64, bottom: 80, left: 96, right: 96 };
 
-export type Theme = Brand & { W: number; H: number; wide: boolean; safe: typeof SAFE_V; family: string; heavy: number };
+type Face = { family: string; heavy: number; style: string };
+export type Theme = Brand & { W: number; H: number; wide: boolean; safe: typeof SAFE_V; family: string; heavy: number; head: Face; hand: Face };
 const Ctx = createContext<Theme | null>(null);
 export const ThemeProvider: React.FC<{ brand?: Partial<Brand>; children: React.ReactNode }> = ({ brand, children }) => {
   const { width, height } = useVideoConfig();
   const b = { ...BRAND, ...(brand || {}) };
   const { family, heavy } = useFont(b.font);
+  const head = useFont(b.headFont || b.font), hand = useFont(b.handFont || b.font);
   const wide = width > height;
-  return <Ctx.Provider value={{ ...b, W: width, H: height, wide, safe: wide ? SAFE_W : SAFE_V, family, heavy }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ ...b, W: width, H: height, wide, safe: wide ? SAFE_W : SAFE_V, family, heavy, head, hand }}>{children}</Ctx.Provider>;
 };
+/** CSS для заголовка й рукописного підпису (шрифти headFont / handFont з config.ts). */
+export const headCss = (T: Theme) => ({ fontFamily: T.head.family, fontWeight: T.head.heavy, fontStyle: T.head.style, letterSpacing: T.headFont && T.headFont !== T.font ? "0" : "-0.04em" });
+export const handCss = (T: Theme) => ({ fontFamily: T.hand.family, fontWeight: T.hand.heavy, fontStyle: T.hand.style });
 export const useTheme = (): Theme => {
   const t = useContext(Ctx);
   if (!t) throw new Error("ThemeProvider missing");
