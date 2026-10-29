@@ -1,19 +1,21 @@
-import { loadFont as montserrat } from "@remotion/google-fonts/Montserrat";
-import { loadFont as inter } from "@remotion/google-fonts/Inter";
-import { loadFont as rubik } from "@remotion/google-fonts/Rubik";
-import { loadFont as unbounded } from "@remotion/google-fonts/Unbounded";
-import { loadFont as manrope } from "@remotion/google-fonts/Manrope";
-import { loadFont as oswald } from "@remotion/google-fonts/Oswald";
-import { loadFont as comfortaa } from "@remotion/google-fonts/Comfortaa";
-import { loadFont as caveat } from "@remotion/google-fonts/Caveat";
-import { loadFont as pacifico } from "@remotion/google-fonts/Pacifico";
-import { loadFont as robotoCondensed } from "@remotion/google-fonts/RobotoCondensed";
-import { loadFont as nunito } from "@remotion/google-fonts/Nunito";
+import { getInfo as montserrat } from "@remotion/google-fonts/Montserrat";
+import { getInfo as inter } from "@remotion/google-fonts/Inter";
+import { getInfo as rubik } from "@remotion/google-fonts/Rubik";
+import { getInfo as unbounded } from "@remotion/google-fonts/Unbounded";
+import { getInfo as manrope } from "@remotion/google-fonts/Manrope";
+import { getInfo as oswald } from "@remotion/google-fonts/Oswald";
+import { getInfo as comfortaa } from "@remotion/google-fonts/Comfortaa";
+import { getInfo as caveat } from "@remotion/google-fonts/Caveat";
+import { getInfo as pacifico } from "@remotion/google-fonts/Pacifico";
+import { getInfo as robotoCondensed } from "@remotion/google-fonts/RobotoCondensed";
+import { getInfo as nunito } from "@remotion/google-fonts/Nunito";
+
+import { cancelRender, continueRender, delayRender, staticFile } from "remotion";
 
 /* ШРИФТИ (усі з кирилицею, безкоштовні Google Fonts). Назву шрифту пишеш у edit.json → captions.font
    або в src/config.ts → BRAND.font. Подивитися всі — композиція «Fonts» (ДЕМО-шрифти.mp4). */
-type Loader = (style?: any, opts?: any) => any;
-const F = (load: Loader, family: string, weights: string[], heavy: number, note: string) => ({ load, family, weights, heavy, note });
+type Info = () => { fontFamily: string; fonts: Record<string, Record<string, Record<string, string>>>; unicodeRanges: Record<string, string> };
+const F = (load: Info, family: string, weights: string[], heavy: number, note: string) => ({ load, family, weights, heavy, note });
 export const FONTS = {
   Montserrat: F(montserrat, "Montserrat", ["600", "800", "900"], 900, "універсальний жирний, як у більшості рілсів"),
   Inter: F(inter, "Inter", ["600", "800", "900"], 900, "спокійний сучасний, для експертів"),
@@ -29,11 +31,23 @@ export const FONTS = {
 };
 export type FontKey = keyof typeof FONTS;
 
+/* Файли шрифтів лежать у public/fonts (node scripts/fonts.mjs) — рендер не ходить у Google Fonts. */
+const fontFile = (url: string) => url.split("/s/")[1].replace(/\//g, "-");
+const loadLocal = (info: ReturnType<Info>, weights: string[]) => {
+  const faces: FontFace[] = [];
+  for (const w of weights) for (const s of ["cyrillic", "latin"]) {
+    const url = info.fonts.normal[w]?.[s];
+    if (url) faces.push(new FontFace(info.fontFamily, `url(${staticFile("fonts/" + fontFile(url))}) format("woff2")`, { weight: w, style: "normal", unicodeRange: info.unicodeRanges[s] }));
+  }
+  const h = delayRender(`шрифт ${info.fontFamily}`);
+  Promise.all(faces.map((ff) => ff.load().then(() => document.fonts.add(ff)))).then(() => continueRender(h), (e) => cancelRender(e));
+};
+
 const loaded = new Set<string>();
 /** Підвантажує шрифт (один раз) і повертає CSS font-family та найжирнішу вагу. */
 export const useFont = (k?: string) => {
   const key = (k && k in FONTS ? k : "Montserrat") as FontKey;
   const f = FONTS[key];
-  if (!loaded.has(key)) { loaded.add(key); f.load("normal", { weights: f.weights, subsets: ["cyrillic", "latin"] }); }
+  if (!loaded.has(key)) { loaded.add(key); loadLocal(f.load(), f.weights); }
   return { family: `"${f.family}", system-ui, sans-serif`, heavy: f.heavy };
 };

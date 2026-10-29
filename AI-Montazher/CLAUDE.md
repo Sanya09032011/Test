@@ -58,6 +58,7 @@
 | музика під ролик | `node scripts/music.mjs <проєкт> "mood prompt"` (або готові треки `studio/public/music`) |
 | аркуш кадрів будь-якого відео | `node scripts/sheet.mjs "<відео>"` |
 | перевірка системи | `node scripts/doctor.mjs` |
+| шрифти локально (рендер без Google Fonts) | `node scripts/fonts.mjs` (файли вже в `studio/public/fonts`) |
 | після здачі: прибрати ЗАНЕСИ-СЮДИ/1 | `node scripts/archive.mjs <проєкт>` |
 
 ## Незмінні правила
