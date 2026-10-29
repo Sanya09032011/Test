@@ -11,7 +11,7 @@ const dst = join(P, "inbox");
 mkdirSync(dst, { recursive: true });
 let n = 0;
 for (const f of readdirSync(src)) {
-  if (f === "що-сюди-класти.txt" || statSync(join(src, f)).isDirectory()) continue;
+  if (f === "ЩО-СЮДИ.txt" || f === "що-сюди-класти.txt" || statSync(join(src, f)).isDirectory()) continue;
   const a = join(src, f), b = join(dst, f);
   copyFileSync(a, b);
   if (statSync(b).size !== statSync(a).size) { console.error("✗ Копія не збіглась, лишаю оригінал:", f); continue; }
