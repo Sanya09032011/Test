@@ -104,7 +104,7 @@ const BaseVideo: React.FC<ReelProps> = (P) => {
 
 const Tag: React.FC = () => {
   const T = useTheme();
-  return <div style={{ position: "absolute", left: T.safe.left, top: T.safe.top - (T.wide ? 30 : 46), display: "flex", alignItems: "center", gap: 10, fontFamily: T.family, fontWeight: 800, fontSize: 22, letterSpacing: "0.02em",
+  return <div style={{ position: "absolute", left: T.safe.left, top: T.safe.top - (T.wide ? 30 : 46), display: "flex", alignItems: "center", gap: 10, fontFamily: T.family, fontWeight: T.weight ?? 800, fontSize: 22, letterSpacing: "0.02em",
     color: "#fff", background: "rgba(0,0,0,.35)", padding: "7px 14px", borderRadius: 12, zIndex: 40 }}>
     <div style={{ width: 12, height: 12, borderRadius: 6, background: T.accent }} />{T.channel}
   </div>;
@@ -117,18 +117,20 @@ const Cover: React.FC<{ title: string; sub?: string; sticker?: string; frame?: n
   const words = title.split(/\s+/).filter(Boolean);
   const maxW = T.W - T.safe.left - T.safe.right - 30;
   const size = Math.min(T.wide ? 140 : 150, maxW / Math.max(...words.map((w) => w.length * 0.8 + 0.4), 1));
-  const onBg = video ? "#FFFFFF" : onColor(T.accent);
+  const dark = !video && T.darkCards;
+  const onBg = video || dark ? "#FFFFFF" : onColor(T.accent);
   return <AbsoluteFill>
     {video ? <AbsoluteFill>
       <OffthreadVideo src={src(video)} muted startFrom={fr(frame)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
       <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.55) 45%, rgba(0,0,0,.2) 100%)" }} />
-    </AbsoluteFill> : <Background name="rays" />}
+    </AbsoluteFill> : <Background name={dark ? "spotlight" : "rays"} />}
     {/* на кадрі з запису напис унизу (обличчя зазвичай угорі), але в межах зони 4:5 */}
-    <div style={{ position: "absolute", left: T.safe.left, right: T.safe.right, ...(video && !T.wide ? { bottom: T.H - 1120 } : { top: T.wide ? 110 : 330 }), fontSize: size, lineHeight: 1, textTransform: "uppercase", ...headCss(T) }}>
-      {words.map((w, i) => i === words.length - 1
+    <div style={{ position: "absolute", left: T.safe.left, right: T.safe.right, ...(video && !T.wide ? { bottom: T.H - 1120 } : { top: T.wide ? 110 : 330 }), fontSize: dark ? size * 0.75 : size, lineHeight: 1.05, textTransform: T.caps ? "uppercase" : undefined, ...headCss(T) }}>
+      {words.map((w, i) => i === words.length - 1 && !dark
         ? <div key={i}><span style={{ display: "inline-block", background: video ? T.accent : T.ink, color: video ? onColor(T.accent) : "#fff", padding: `${size * 0.04}px ${size * 0.12}px ${size * 0.1}px`, borderRadius: size * 0.14, marginTop: size * 0.06 }}>{w}</span></div>
         : <div key={i} style={{ color: onBg, textShadow: video ? "0 6px 24px rgba(0,0,0,.6)" : "none" }}>{w}</div>)}
-      {sub && <div style={{ display: "inline-block", marginTop: 22, fontSize: 52, letterSpacing: 0, ...handCss(T), background: video ? "#fff" : T.ink, color: video ? "#111" : "#fff", padding: "8px 18px", borderRadius: 14, textTransform: "none" }}>{sub}</div>}
+      {sub && (dark ? <div style={{ marginTop: 26, fontSize: 60, letterSpacing: 0, ...handCss(T), color: T.accent, textTransform: "none" }}>{sub}</div>
+        : <div style={{ display: "inline-block", marginTop: 22, fontSize: 52, letterSpacing: 0, ...handCss(T), background: video ? "#fff" : T.ink, color: video ? "#111" : "#fff", padding: "8px 18px", borderRadius: 14, textTransform: "none" }}>{sub}</div>)}
     </div>
     {st && <Img src={src(st)} style={{ position: "absolute", right: T.safe.right - 20, bottom: T.wide ? 40 : 150, height: T.wide ? T.H * 0.62 : 480, objectFit: "contain", filter: "drop-shadow(0 30px 40px rgba(0,0,0,.4))" }} />}
   </AbsoluteFill>;
@@ -139,11 +141,11 @@ const EndCard: React.FC<{ at: number; title?: string; sub?: string }> = ({ at, t
   const T = useTheme();
   const p = spr(f, at, 12, 170);
   return <AbsoluteFill>
-    <Background name="blobs" />
+    <Background name={T.darkCards ? "spotlight" : "blobs"} />
     <div style={{ position: "absolute", left: T.safe.left, right: T.safe.right, top: T.wide ? 140 : 300, fontFamily: T.family, transform: `translateY(${(1 - p) * 60}px)`, opacity: Math.min(1, p * 1.5) }}>
-      <div style={{ fontSize: Math.min(T.wide ? 110 : 112, (T.W - T.safe.left - T.safe.right) / Math.max(1, title.length * 0.66)), lineHeight: 1, ...headCss(T), color: T.ink, whiteSpace: "nowrap" }}>{title}</div>
-      {sub && <div style={{ fontSize: 52, marginTop: 18, color: T.ink, opacity: 0.8, ...handCss(T) }}>{sub}</div>}
-      <div style={{ marginTop: 26, display: "inline-flex", alignItems: "center", gap: 12, background: T.ink, color: "#fff", padding: "12px 22px", borderRadius: 18, fontWeight: 800, fontSize: 36 }}>
+      <div style={{ fontSize: Math.min(T.wide ? 110 : 112, (T.W - T.safe.left - T.safe.right) / Math.max(1, title.length * 0.66)), lineHeight: 1, ...headCss(T), color: T.darkCards ? "#fff" : T.ink, whiteSpace: "nowrap" }}>{title}</div>
+      {sub && <div style={{ fontSize: 52, marginTop: 18, color: T.darkCards ? T.accent : T.ink, opacity: 0.8, ...handCss(T) }}>{sub}</div>}
+      <div style={{ marginTop: 26, display: "inline-flex", alignItems: "center", gap: 12, background: T.darkCards ? "rgba(255,255,255,.1)" : T.ink, color: "#fff", padding: "12px 22px", borderRadius: 18, fontWeight: T.darkCards ? 500 : 800, fontSize: 36 }}>
         <div style={{ width: 16, height: 16, borderRadius: 8, background: T.accent }} />{T.handle}
       </div>
       <div style={{ display: "flex", gap: 16, marginTop: 30 }}>

@@ -57,7 +57,7 @@ export const EventView: React.FC<{ e: Ev; all?: Ev[]; talk?: boolean }> = ({ e, 
         transform: `${float(f, e.at, 5)} scale(${(0.3 + 0.7 * q) * (1 - 0.3 * (1 - vis))}) rotate(${(e.rot ?? (x < W / 2 ? -6 : 6)) * q + (1 - q) * -30}deg)` }}>
         {tile ? <div style={{ width: size, height: size, borderRadius: size * 0.24, background: "#fff", boxShadow: "0 24px 40px -16px rgba(0,0,0,.55)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: size * 0.04 }}>
           <Img src={src(file)} style={{ width: size * 0.56, height: size * 0.56, objectFit: "contain" }} />
-          {e.label && <div style={{ fontFamily: T.family, fontWeight: 800, fontSize: size * 0.11, color: "#111" }}>{e.label}</div>}
+          {e.label && <div style={{ fontFamily: T.family, fontWeight: T.weight ?? 800, fontSize: size * 0.11, color: "#111" }}>{e.label}</div>}
         </div> : <Img src={src(file)} style={{ width: size, height: size, objectFit: "contain", filter: "drop-shadow(0 20px 24px rgba(0,0,0,.35))" }} />}
       </div>;
     }
@@ -75,7 +75,7 @@ export const EventView: React.FC<{ e: Ev; all?: Ev[]; talk?: boolean }> = ({ e, 
         <div style={{ position: "absolute", left: 0, top: 0, width: 14, height: 118, background: T.accent, borderRadius: 7, transform: `scaleY(${k})`, transformOrigin: "50% 0" }} />
         <div style={{ marginLeft: 26, overflow: "hidden", width: (T.wide ? 620 : 520) * bar, whiteSpace: "nowrap" }}>
           <div style={{ display: "inline-block", background: T.ink, color: "#fff", padding: "10px 22px", borderRadius: 16, fontWeight: H, fontSize: 46, letterSpacing: "-0.02em" }}>{e.name}</div><br />
-          {e.role && <div style={{ display: "inline-block", marginTop: 8, background: T.accent, color: onColor(T.accent), padding: "6px 18px", borderRadius: 12, fontWeight: 700, fontSize: 30 }}>{e.role}</div>}
+          {e.role && <div style={{ display: "inline-block", marginTop: 8, background: T.accent, color: onColor(T.accent), padding: "6px 18px", borderRadius: 12, fontWeight: T.weight ?? 700, fontSize: 30 }}>{e.role}</div>}
         </div>
       </div>;
     }
@@ -105,7 +105,7 @@ export const EventView: React.FC<{ e: Ev; all?: Ev[]; talk?: boolean }> = ({ e, 
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: 24, fontWeight: 600, opacity: 0.55 }}><span>{e.app ?? "Повідомлення"}</span><span>зараз</span></div>
-            <div style={{ fontSize: 31, fontWeight: 800, marginTop: 2, lineHeight: 1.15, maxHeight: 72, overflow: "hidden" }}>{e.title}</div>
+            <div style={{ fontSize: 31, fontWeight: T.weight ?? 800, marginTop: 2, lineHeight: 1.15, maxHeight: 72, overflow: "hidden" }}>{e.title}</div>
             {e.text && <div style={{ fontSize: 28, fontWeight: 600, opacity: 0.75, marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{e.text}</div>}
           </div>
         </div>
@@ -131,12 +131,12 @@ export const EventView: React.FC<{ e: Ev; all?: Ev[]; talk?: boolean }> = ({ e, 
 
     /* ── великі ── */
     case "title": {
-      const text = String(e.text ?? ""), size = fit(text, T.wide ? 130 : 120, maxW, 0.66);
+      const text = String(e.text ?? ""), size = fit(text, Math.min(T.wide ? 130 : 120, T.titleSize), maxW, 0.66);
       const k = spr(f, a, 10, 190);
       return <AbsoluteFill style={{ zIndex: 15, opacity: vis, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 18, top: zone(T).cy - T.H / 2, fontFamily: T.family }}>
         <div style={{ position: "relative", transform: `scale(${1.6 - 0.6 * k})`, filter: k < 0.99 ? `blur(${(1 - k) * 10}px)` : undefined, opacity: Math.min(1, k * 1.5) }}>
-          <div style={{ position: "absolute", left: -18, right: -18, top: "52%", height: "42%", background: T.accent, borderRadius: 10, transform: `scaleX(${eout((lf - 6) / 10)}) rotate(-1.5deg)`, transformOrigin: "0 50%" }} />
-          <div style={{ position: "relative", fontSize: size, lineHeight: 1, ...headCss(T), color: e.color ?? "#fff", textShadow: "0 10px 30px rgba(0,0,0,.5)", whiteSpace: "nowrap", textTransform: e.upper === false ? undefined : "uppercase" }}>{text}</div>
+          {T.titleBar && <div style={{ position: "absolute", left: -18, right: -18, top: "52%", height: "42%", background: T.accent, borderRadius: 10, transform: `scaleX(${eout((lf - 6) / 10)}) rotate(-1.5deg)`, transformOrigin: "0 50%" }} />}
+          <div style={{ position: "relative", fontSize: size, lineHeight: 1, ...headCss(T), color: e.color ?? "#fff", textShadow: "0 10px 30px rgba(0,0,0,.5)", whiteSpace: "nowrap", textTransform: (e.upper ?? T.caps) ? "uppercase" : undefined }}>{text}</div>
         </div>
         {e.sub && <div style={{ fontSize: 56, ...handCss(T), color: "#fff", opacity: clamp01((lf - 10) / 6), textShadow: "0 6px 20px rgba(0,0,0,.6)" }}>{e.sub}</div>}
       </AbsoluteFill>;
@@ -150,7 +150,7 @@ export const EventView: React.FC<{ e: Ev; all?: Ev[]; talk?: boolean }> = ({ e, 
         <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
           <div style={{ fontWeight: H, fontSize: fit(txt, 150, 540, 0.62), lineHeight: 1, letterSpacing: "-0.05em", color: T.ink, fontVariantNumeric: "tabular-nums", transform: `scale(${done ? 1 + 0.08 * Math.max(0, 1 - (lf - run) / 8) : 1})` }}>{txt}</div>
           <div style={{ width: 120, height: 10, borderRadius: 5, background: T.accent }} />
-          {e.label && <div style={{ fontWeight: 700, fontSize: 38, opacity: 0.75, textAlign: "center" }}>{e.label}</div>}
+          {e.label && <div style={{ fontWeight: T.weight ?? 700, fontSize: 38, opacity: 0.75, textAlign: "center" }}>{e.label}</div>}
         </div>
       </Card>;
     }
@@ -167,7 +167,7 @@ export const EventView: React.FC<{ e: Ev; all?: Ev[]; talk?: boolean }> = ({ e, 
             <div style={{ width: 60, height: 60, borderRadius: 30, background: on ? T.accent : "#ddd", color: onColor(T.accent), flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: H, fontSize: 32, transform: `scale(${0.6 + 0.4 * q})` }}>
               {steps ? i + 1 : <svg width={32} height={32} viewBox="0 0 26 26"><path d="M4,14 L10,20 L22,6" fill="none" stroke={onColor(T.accent)} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" /></svg>}
             </div>
-            <div style={{ fontWeight: 800, fontSize: fit(it, 42, T.wide ? 580 : 440, 0.56), letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>{it}</div>
+            <div style={{ fontWeight: T.weight ?? 800, fontSize: fit(it, 42, T.wide ? 580 : 440, 0.56), letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>{it}</div>
           </div>; })}
       </Card>;
     }
@@ -184,7 +184,7 @@ export const EventView: React.FC<{ e: Ev; all?: Ev[]; talk?: boolean }> = ({ e, 
             </div>; })}
         </div>
         <div style={{ position: "absolute", left: 34, right: 34, bottom: 22, display: "flex", justifyContent: "center", gap: 22 }}>
-          {bars.map((b, i) => <div key={i} style={{ width: bw, textAlign: "center", fontWeight: 700, fontSize: 24, opacity: 0.7, whiteSpace: "nowrap", overflow: "hidden" }}>{b.label}</div>)}
+          {bars.map((b, i) => <div key={i} style={{ width: bw, textAlign: "center", fontWeight: T.weight ?? 700, fontSize: 24, opacity: 0.7, whiteSpace: "nowrap", overflow: "hidden" }}>{b.label}</div>)}
         </div>
       </Card>;
     }
@@ -198,7 +198,7 @@ export const EventView: React.FC<{ e: Ev; all?: Ev[]; talk?: boolean }> = ({ e, 
           <svg width={48} height={48} viewBox="0 0 26 26">{good ? <path d="M4,14 L10,20 L22,6" fill="none" stroke="#fff" strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" /> : <path d="M6,6 L20,20 M20,6 L6,20" stroke="#fff" strokeWidth={4} strokeLinecap="round" />}</svg>
         </div>
         <div style={{ fontWeight: H, fontSize: fit(S.title ?? "", 48, cw - 40, 0.6), letterSpacing: "-0.03em", textAlign: "center" }}>{S.title}</div>
-        {(S.items ?? []).map((it: string, i: number) => <div key={i} style={{ fontWeight: 700, fontSize: fit(it, 30, cw - 40, 0.55), opacity: clamp01((f - a - 12 - i * 5) / 6) * 0.85, textAlign: "center" }}>{it}</div>)}
+        {(S.items ?? []).map((it: string, i: number) => <div key={i} style={{ fontWeight: T.weight ?? 700, fontSize: fit(it, 30, cw - 40, 0.55), opacity: clamp01((f - a - 12 - i * 5) / 6) * 0.85, textAlign: "center" }}>{it}</div>)}
       </div>;
       return <AbsoluteFill style={{ zIndex: 15, opacity: vis }}>
         <div style={{ position: "absolute", left: 0, right: 0, top: Z.cy - ch / 2, display: "flex", justifyContent: "center", gap }}>{col(L, false, kl, -1)}{col(R, true, kr, 1)}</div>

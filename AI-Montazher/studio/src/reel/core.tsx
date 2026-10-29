@@ -16,7 +16,8 @@ const Ctx = createContext<Theme | null>(null);
 export const ThemeProvider: React.FC<{ brand?: Partial<Brand>; children: React.ReactNode }> = ({ brand, children }) => {
   const { width, height } = useVideoConfig();
   const b = { ...BRAND, ...(brand || {}) };
-  const { family, heavy } = useFont(b.font);
+  const { family, heavy: fontHeavy } = useFont(b.font);
+  const heavy = b.weight ?? fontHeavy;
   const head = useFont(b.headFont || b.font), hand = useFont(b.handFont || b.font);
   const wide = width > height;
   return <Ctx.Provider value={{ ...b, W: width, H: height, wide, safe: wide ? SAFE_W : SAFE_V, family, heavy, head, hand }}>{children}</Ctx.Provider>;

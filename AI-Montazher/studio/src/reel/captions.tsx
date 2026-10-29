@@ -17,6 +17,8 @@ export const CAPTION_PRESETS = ["classic", "pop", "karaoke", "box", "typewriter"
 export type CapPreset = typeof CAPTION_PRESETS[number];
 export type CapStyle = {
   preset: CapPreset;
+  /** товщина літер (400 — звичайний, 500 — трохи щільніший), за замовчуванням — найжирніша */
+  weight?: number;
   /** шрифт (src/reel/fonts.ts), за замовчуванням — шрифт бренду */
   font?: string;
   /** колір звичайних слів */
@@ -58,7 +60,8 @@ export const Captions: React.FC<{ words: Word[]; style: CapStyle; keywords?: str
   const f = useCurrentFrame();
   const T = useTheme();
   const preset = style.preset ?? "classic";
-  const { family, heavy } = useFont(style.font ?? T.font);
+  const { family, heavy: fontHeavy } = useFont(style.font ?? T.font);
+  const heavy = style.weight ?? fontHeavy;
   const maxWords = style.maxWords ?? (preset === "hormozi" ? 2 : preset === "minimal" ? 5 : 3);
   const groups = React.useMemo(() => groupWords(words, keywords, maxWords), [words, keywords, maxWords]);
   const t = f / FPS;

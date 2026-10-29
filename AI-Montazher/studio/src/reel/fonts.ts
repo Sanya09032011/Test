@@ -18,7 +18,7 @@ import { cancelRender, continueRender, delayRender, staticFile } from "remotion"
 type Info = () => { fontFamily: string; fonts: Record<string, Record<string, Record<string, string>>>; unicodeRanges: Record<string, string> };
 const F = (load: Info, family: string, weights: string[], heavy: number, note: string, italic = false) => ({ load, family, weights, heavy, note, italic });
 export const FONTS = {
-  Montserrat: F(montserrat, "Montserrat", ["600", "800", "900"], 900, "універсальний жирний, як у більшості рілсів"),
+  Montserrat: F(montserrat, "Montserrat", ["400", "500", "600", "800", "900"], 900, "універсальний жирний, як у більшості рілсів"),
   Inter: F(inter, "Inter", ["600", "800", "900"], 900, "спокійний сучасний, для експертів"),
   Rubik: F(rubik, "Rubik", ["600", "800", "900"], 900, "округлий дружній"),
   Unbounded: F(unbounded, "Unbounded", ["600", "800", "900"], 900, "широкий яскравий, для заголовків"),
