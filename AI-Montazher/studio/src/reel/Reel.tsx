@@ -125,7 +125,7 @@ const Cover: React.FC<{ title: string; sub?: string; sticker?: string; frame?: n
       <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.55) 45%, rgba(0,0,0,.2) 100%)" }} />
     </AbsoluteFill> : <Background name={dark ? "spotlight" : "rays"} />}
     {/* на кадрі з запису напис унизу (обличчя зазвичай угорі), але в межах зони 4:5 */}
-    <div style={{ position: "absolute", left: T.safe.left, right: T.safe.right, ...(video && !T.wide ? { bottom: T.H - 1120 } : { top: T.wide ? 110 : 330 }), fontSize: dark ? size * 0.75 : size, lineHeight: 1.05, textTransform: T.caps ? "uppercase" : undefined, ...headCss(T) }}>
+    <div style={{ position: "absolute", left: T.safe.left, right: T.safe.right, ...(video && !T.wide ? { bottom: T.H - 1120 } : { top: T.wide ? 110 : 330 }), fontSize: dark ? Math.min(size, T.titleSize * 1.3) : size, lineHeight: 1.05, textTransform: T.caps ? "uppercase" : undefined, ...headCss(T) }}>
       {words.map((w, i) => i === words.length - 1 && !dark
         ? <div key={i}><span style={{ display: "inline-block", background: video ? T.accent : T.ink, color: video ? onColor(T.accent) : "#fff", padding: `${size * 0.04}px ${size * 0.12}px ${size * 0.1}px`, borderRadius: size * 0.14, marginTop: size * 0.06 }}>{w}</span></div>
         : <div key={i} style={{ color: onBg, textShadow: video ? "0 6px 24px rgba(0,0,0,.6)" : "none" }}>{w}</div>)}
@@ -143,7 +143,7 @@ const EndCard: React.FC<{ at: number; title?: string; sub?: string }> = ({ at, t
   return <AbsoluteFill>
     <Background name={T.darkCards ? "spotlight" : "blobs"} />
     <div style={{ position: "absolute", left: T.safe.left, right: T.safe.right, top: T.wide ? 140 : 300, fontFamily: T.family, transform: `translateY(${(1 - p) * 60}px)`, opacity: Math.min(1, p * 1.5) }}>
-      <div style={{ fontSize: Math.min(T.wide ? 110 : 112, (T.W - T.safe.left - T.safe.right) / Math.max(1, title.length * 0.66)), lineHeight: 1, ...headCss(T), color: T.darkCards ? "#fff" : T.ink, whiteSpace: "nowrap" }}>{title}</div>
+      <div style={{ fontSize: Math.min(T.wide ? 110 : 112, T.darkCards ? T.titleSize * 1.3 : 999, (T.W - T.safe.left - T.safe.right) / Math.max(1, title.length * 0.66)), lineHeight: 1, ...headCss(T), color: T.darkCards ? "#fff" : T.ink, whiteSpace: "nowrap" }}>{title}</div>
       {sub && <div style={{ fontSize: 52, marginTop: 18, color: T.darkCards ? T.accent : T.ink, opacity: 0.8, ...handCss(T) }}>{sub}</div>}
       <div style={{ marginTop: 26, display: "inline-flex", alignItems: "center", gap: 12, background: T.darkCards ? "rgba(255,255,255,.1)" : T.ink, color: "#fff", padding: "12px 22px", borderRadius: 18, fontWeight: T.darkCards ? 500 : 800, fontSize: 36 }}>
         <div style={{ width: 16, height: 16, borderRadius: 8, background: T.accent }} />{T.handle}

@@ -23,7 +23,7 @@ export const ThemeProvider: React.FC<{ brand?: Partial<Brand>; children: React.R
   return <Ctx.Provider value={{ ...b, W: width, H: height, wide, safe: wide ? SAFE_W : SAFE_V, family, heavy, head, hand }}>{children}</Ctx.Provider>;
 };
 /** CSS для заголовка й рукописного підпису (шрифти headFont / handFont з config.ts). */
-export const headCss = (T: Theme) => ({ fontFamily: T.head.family, fontWeight: T.head.heavy, fontStyle: T.head.style, letterSpacing: T.headFont && T.headFont !== T.font ? "0" : "-0.04em" });
+export const headCss = (T: Theme) => ({ fontFamily: T.head.family, fontWeight: T.headFont && T.headFont !== T.font ? T.head.heavy : T.heavy, fontStyle: T.head.style, letterSpacing: T.headFont && T.headFont !== T.font ? "0" : "-0.04em" });
 export const handCss = (T: Theme) => ({ fontFamily: T.hand.family, fontWeight: T.hand.heavy, fontStyle: T.hand.style });
 export const useTheme = (): Theme => {
   const t = useContext(Ctx);
