@@ -1,2 +1,7 @@
 .env
 node_modules/
+studio/node_modules/
+studio/out/
+studio/public/jobs/
+projects/*/
+!projects/README.md
