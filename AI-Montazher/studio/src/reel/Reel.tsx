@@ -41,9 +41,11 @@ const ReelInner: React.FC<ReelProps> = (P) => {
   </AbsoluteFill>;
 };
 
+const sfxPath = (o: unknown, def?: string) => o === false ? undefined : typeof o === "string" ? (o.startsWith("u/") ? U(o.slice(2)) : o) : def;
 const AutoSfx: React.FC<ReelProps> = (P) => <>
-  {(P.events ?? []).map((e, i) => SFX[e.type] && <Sequence key={"e" + i} from={Math.max(0, fr(e.at) + (e.type === "subscribe" ? Math.round(fr(evDur(e)) * 0.45) : 0))} durationInFrames={45} layout="none"><Audio src={src(SFX[e.type])} volume={0.1} /></Sequence>)}
-  {(P.transitions ?? []).map((t, i) => <Sequence key={"t" + i} from={Math.max(0, fr(t.at) - 3)} durationInFrames={40} layout="none"><Audio src={src(TR_SFX[t.type] ?? TR_SFX.zoom)} volume={0.08} /></Sequence>)}
+  {/* e.sfx: свій звук події ("u/clicks/24-typewriter-soft-click" або "sfx/….mp3"), false — без звуку; e.vol — гучність; type "sound" — лише звук */}
+  {(P.events ?? []).map((e, i) => { const s = sfxPath(e.sfx, SFX[e.type]); return s && <Sequence key={"e" + i} from={Math.max(0, fr(e.at) + (e.type === "subscribe" ? Math.round(fr(evDur(e)) * 0.45) : 0))} durationInFrames={fr(e.sfxDur ?? 1.5)} layout="none"><Audio src={src(s)} volume={e.vol ?? 0.1} /></Sequence>; })}
+  {(P.transitions ?? []).map((t: any, i) => { const s = sfxPath(t.sfx, TR_SFX[t.type] ?? TR_SFX.zoom); return s && <Sequence key={"t" + i} from={Math.max(0, fr(t.at) - 3)} durationInFrames={40} layout="none"><Audio src={src(s)} volume={t.vol ?? 0.08} /></Sequence>; })}
   {P.end && <Sequence from={fr(P.duration)} durationInFrames={45} layout="none"><Audio src={src(U("whoosh/07-short-transition-sweep"))} volume={0.1} /></Sequence>}
 </>;
 
