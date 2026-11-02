@@ -52,7 +52,7 @@ const a = cuts.map((c, i) => `[0:a]atrim=${c.a.toFixed(3)}:${c.b.toFixed(3)},ase
 const cat = cuts.map((_, i) => `[v${i}][a${i}]`).join("") + `concat=n=${cuts.length}:v=1:a=1[v][ac];[ac]highpass=f=80,acompressor=threshold=-20dB:ratio=3:attack=5:release=80,loudnorm=I=-16:TP=-1.5:LRA=9[a]`;
 const fpath = join(P, "cut_filter.txt");
 writeFileSync(fpath, `${v};${a};${cat}`);
-ff(["-i", join(P, "media", "src.mp4"), "-/filter_complex", fpath, "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-crf", "14", "-preset", "medium", "-pix_fmt", "yuv420p", "-r", "30", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", join(P, "media", "cut.mp4")]);
+ff(["-i", join(P, "media", "src.mp4"), "-filter_complex_script", fpath, "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-crf", "14", "-preset", "medium", "-pix_fmt", "yuv420p", "-r", "30", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", join(P, "media", "cut.mp4")]);
 writeJSON(join(P, "segments.json"), segsOut);
 writeJSON(join(P, "cut_transcript.json"), { words: out, duration: +acc.toFixed(3) });
 const was = all.at(-1)?.end ?? 0;
